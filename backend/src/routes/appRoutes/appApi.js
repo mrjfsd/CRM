@@ -30,4 +30,11 @@ routesList.forEach(({ entity, controllerName }) => {
   routerApp(entity, controller);
 });
 
+// Explicit camelCase alias: PaymentMode.js lowercases to 'paymentmode' but
+// PaymentForm.jsx calls entity='paymentMode'. Register both to avoid a 404.
+const paymentModeController = appControllers['paymentModeController'];
+if (paymentModeController) {
+  routerApp('paymentMode', paymentModeController);
+}
+
 module.exports = router;

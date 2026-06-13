@@ -29,7 +29,7 @@ const SelectAsync = ({
   };
   const { result, isLoading: fetchIsLoading, isSuccess } = useFetch(asyncList);
   useEffect(() => {
-    isSuccess && setOptions(result);
+    isSuccess && setOptions(result ?? []);
   }, [isSuccess]);
 
   const labels = (optionField) => {
@@ -61,7 +61,7 @@ const SelectAsync = ({
     //   const label = `+ ${translate(redirectLabel)}`;
     //   list.push({ value, label });
     // }
-    selectOptions.map((optionField) => {
+    (selectOptions ?? []).map((optionField) => {
       const value = optionField[outputValue] ?? optionField;
       const label = labels(optionField);
       const currentColor = optionField[outputValue]?.color ?? optionField?.color;

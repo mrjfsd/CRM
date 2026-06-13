@@ -12,11 +12,18 @@ const InvoiceRead = lazy(() => import('@/pages/Invoice/InvoiceRead'));
 const InvoiceUpdate = lazy(() => import('@/pages/Invoice/InvoiceUpdate'));
 const InvoiceRecordPayment = lazy(() => import('@/pages/Invoice/InvoiceRecordPayment'));
 
+const Quote = lazy(() => import('@/pages/Quote'));
+const QuoteCreate = lazy(() => import('@/pages/Quote/QuoteCreate'));
+const QuoteRead = lazy(() => import('@/pages/Quote/QuoteRead'));
+const QuoteUpdate = lazy(() => import('@/pages/Quote/QuoteUpdate'));
+
 const Payment = lazy(() => import('@/pages/Payment/index'));
 const PaymentRead = lazy(() => import('@/pages/Payment/PaymentRead'));
 const PaymentUpdate = lazy(() => import('@/pages/Payment/PaymentUpdate'));
+const PaymentMode = lazy(() => import('@/pages/PaymentMode'));
 
 const Settings = lazy(() => import('@/pages/Settings/Settings'));
+const Taxes = lazy(() => import('@/pages/Taxes'));
 const Profile = lazy(() => import('@/pages/Profile'));
 const About = lazy(() => import('@/pages/About'));
 
@@ -34,21 +41,19 @@ let routes = {
     { path: '/invoice/update/:id', element: <InvoiceUpdate /> },
     { path: '/invoice/pay/:id', element: <InvoiceRecordPayment /> },
     
-    // --- Commented out non-existent pages ---
-    // { path: '/quote', element: <Quote /> },
-    // { path: '/quote/create', element: <QuoteCreate /> },
-    // { path: '/quote/read/:id', element: <QuoteRead /> },
-    // { path: '/quote/update/:id', element: <QuoteUpdate /> },
+    { path: '/quote', element: <Quote /> },
+    { path: '/quote/create', element: <QuoteCreate /> },
+    { path: '/quote/read/:id', element: <QuoteRead /> },
+    { path: '/quote/update/:id', element: <QuoteUpdate /> },
     
     { path: '/payment', element: <Payment /> },
+    { path: '/payment/mode', element: <PaymentMode /> },
     { path: '/payment/read/:id', element: <PaymentRead /> },
     { path: '/payment/update/:id', element: <PaymentUpdate /> },
     { path: '/settings', element: <Settings /> },
     { path: '/settings/edit/:settingsKey', element: <Settings /> },
     
-    // --- Commented out non-existent pages ---
-    // { path: '/payment/mode', element: <PaymentMode /> },
-    // { path: '/taxes', element: <Taxes /> },
+    { path: '/taxes', element: <Taxes /> },
 
     { path: '/profile', element: <Profile /> },
     { path: '*', element: <NotFound /> },
