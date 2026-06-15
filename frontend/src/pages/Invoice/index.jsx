@@ -5,6 +5,7 @@ import { tagColor } from '@/utils/statusTagColor';
 
 import { useMoney, useDate } from '@/settings';
 import InvoiceDataTableModule from '@/modules/InvoiceModule/InvoiceDataTableModule';
+import DashboardSummary from '@/components/DashboardSummary';
 
 export default function Invoice() {
   const translate = useLanguage();
@@ -101,5 +102,12 @@ export default function Invoice() {
     deleteModalLabels,
   };
 
-  return <InvoiceDataTableModule config={config} />;
+  return (
+    <>
+      <div style={{ padding: '0 0 24px 0' }}>
+        <DashboardSummary />
+      </div>
+      <InvoiceDataTableModule config={config} />
+    </>
+  );
 }
