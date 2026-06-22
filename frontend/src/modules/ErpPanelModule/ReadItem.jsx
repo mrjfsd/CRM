@@ -157,7 +157,7 @@ export default function ReadItem({ config, selectedItem }) {
     console.log('DOWNLOAD URL =', url);
     alert(url);
 
-    window.open(url, '_blank');
+   window.location.href = url;
   }}
   icon={<FilePdfOutlined />}
 >
