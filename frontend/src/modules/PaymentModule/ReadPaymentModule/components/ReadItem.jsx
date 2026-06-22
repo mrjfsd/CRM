@@ -92,10 +92,7 @@ export default function ReadItem({ config, selectedItem }) {
           <Button
             key={`${uniqueId()}`}
             onClick={() => {
-              window.open(
-                `${DOWNLOAD_BASE_URL}${entity}/${entity}-${currentErp._id}.pdf`,
-                '_blank'
-              );
+              window.location.href = `${DOWNLOAD_BASE_URL}${entity}/${entity}-${currentErp._id}.pdf`;
             }}
             icon={<FilePdfOutlined />}
           >

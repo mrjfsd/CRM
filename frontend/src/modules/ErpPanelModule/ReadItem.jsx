@@ -153,11 +153,7 @@ export default function ReadItem({ config, selectedItem }) {
   key={`${uniqueId()}`}
   onClick={() => {
     const url = `${DOWNLOAD_BASE_URL}${entity}/${entity}-${currentErp._id}.pdf`;
-
-    console.log('DOWNLOAD URL =', url);
-    alert(url);
-
-   window.location.href = url;
+    window.location.href = url;
   }}
   icon={<FilePdfOutlined />}
 >
