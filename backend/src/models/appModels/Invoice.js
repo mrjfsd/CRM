@@ -67,6 +67,10 @@ const invoiceSchema = new mongoose.Schema({
         default: 1,
         required: true,
       },
+      unit: {
+        type: Number,
+        default: 1,
+      },
       price: {
         type: Number,
         required: true,

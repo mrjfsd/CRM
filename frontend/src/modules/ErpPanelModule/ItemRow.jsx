@@ -9,6 +9,7 @@ export default function ItemRow({ field, remove, current = null }) {
   const [totalState, setTotal] = useState(undefined);
   const [price, setPrice] = useState(0);
   const [quantity, setQuantity] = useState(0);
+  const [unit, setUnit] = useState(1);
 
   const money = useMoney();
   const updateQt = (value) => {
@@ -16,6 +17,9 @@ export default function ItemRow({ field, remove, current = null }) {
   };
   const updatePrice = (value) => {
     setPrice(value);
+  };
+  const updateUnit = (value) => {
+    setUnit(value ?? 1);
   };
 
   useEffect(() => {
@@ -32,6 +36,7 @@ export default function ItemRow({ field, remove, current = null }) {
 
         if (item) {
           setQuantity(item.quantity);
+          setUnit(item.unit ?? 1);
           setPrice(item.price);
         }
       } else {
@@ -39,6 +44,7 @@ export default function ItemRow({ field, remove, current = null }) {
 
         if (item) {
           setQuantity(item.quantity);
+          setUnit(item.unit ?? 1);
           setPrice(item.price);
         }
       }
@@ -46,10 +52,10 @@ export default function ItemRow({ field, remove, current = null }) {
   }, [current]);
 
   useEffect(() => {
-    const currentTotal = calculate.multiply(price, quantity);
+    const currentTotal = calculate.multiply(calculate.multiply(price, unit), quantity);
 
     setTotal(currentTotal);
-  }, [price, quantity]);
+  }, [price, quantity, unit]);
 
   return (
     <Row gutter={[12, 12]} style={{ position: 'relative' }}>
@@ -70,14 +76,40 @@ export default function ItemRow({ field, remove, current = null }) {
           <Input placeholder="Item Name" />
         </Form.Item>
       </Col>
-      <Col className="gutter-row" span={7}>
+      <Col className="gutter-row" span={6}>
         <Form.Item name={[field.name, 'description']}>
           <Input placeholder="description Name" />
         </Form.Item>
       </Col>
-      <Col className="gutter-row" span={3}>
+      <Col className="gutter-row" span={2}>
         <Form.Item name={[field.name, 'quantity']} rules={[{ required: true }]}>
           <InputNumber style={{ width: '100%' }} min={0} onChange={updateQt} />
+        </Form.Item>
+      </Col>
+      <Col className="gutter-row" span={2}>
+        <Form.Item
+          name={[field.name, 'unit']}
+          initialValue={1}
+          rules={[
+            { required: true, message: 'Required' },
+            {
+              type: 'integer',
+              message: 'Must be an integer',
+            },
+            {
+              validator: (_, value) =>
+                value >= 1
+                  ? Promise.resolve()
+                  : Promise.reject(new Error('Min value is 1')),
+            },
+          ]}
+        >
+          <InputNumber
+            style={{ width: '100%' }}
+            min={1}
+            precision={0}
+            onChange={updateUnit}
+          />
         </Form.Item>
       </Col>
       <Col className="gutter-row" span={4}>
@@ -92,7 +124,7 @@ export default function ItemRow({ field, remove, current = null }) {
           />
         </Form.Item>
       </Col>
-      <Col className="gutter-row" span={5}>
+      <Col className="gutter-row" span={4}>
         <Form.Item name={[field.name, 'total']}>
           <Form.Item>
             <InputNumber

@@ -28,7 +28,8 @@ const create = async (req, res) => {
 
   //Calculate the items array with subTotal, total, taxTotal
   items.map((item) => {
-    let total = calculate.multiply(item['quantity'], item['price']);
+    const unit = item['unit'] ?? 1;
+    let total = calculate.multiply(calculate.multiply(item['quantity'], unit), item['price']);
     //sub total
     subTotal = calculate.add(subTotal, total);
     //item total

@@ -28,11 +28,29 @@ const Item = ({ item, currentErp }) => {
   const { moneyFormatter } = useMoney();
   return (
     <Row gutter={[12, 0]} key={item._id}>
-      <Col className="gutter-row" span={11}>
+      <Col className="gutter-row" span={10}>
         <p style={{ marginBottom: 5 }}>
           <strong>{item.itemName}</strong>
         </p>
         <p>{item.description}</p>
+      </Col>
+      <Col className="gutter-row" span={3}>
+        <p
+          style={{
+            textAlign: 'right',
+          }}
+        >
+          {item.quantity}
+        </p>
+      </Col>
+      <Col className="gutter-row" span={3}>
+        <p
+          style={{
+            textAlign: 'right',
+          }}
+        >
+          {item.unit ?? 1}
+        </p>
       </Col>
       <Col className="gutter-row" span={4}>
         <p
@@ -44,15 +62,6 @@ const Item = ({ item, currentErp }) => {
         </p>
       </Col>
       <Col className="gutter-row" span={4}>
-        <p
-          style={{
-            textAlign: 'right',
-          }}
-        >
-          {item.quantity}
-        </p>
-      </Col>
-      <Col className="gutter-row" span={5}>
         <p
           style={{
             textAlign: 'right',
@@ -240,9 +249,27 @@ export default function ReadItem({ config, selectedItem }) {
       </Descriptions>
       <Divider />
       <Row gutter={[12, 0]}>
-        <Col className="gutter-row" span={11}>
+        <Col className="gutter-row" span={10}>
           <p>
             <strong>{translate('Product')}</strong>
+          </p>
+        </Col>
+        <Col className="gutter-row" span={3}>
+          <p
+            style={{
+              textAlign: 'right',
+            }}
+          >
+            <strong>{translate('Quantity')}</strong>
+          </p>
+        </Col>
+        <Col className="gutter-row" span={3}>
+          <p
+            style={{
+              textAlign: 'right',
+            }}
+          >
+            <strong>{translate('Unit')}</strong>
           </p>
         </Col>
         <Col className="gutter-row" span={4}>
@@ -255,15 +282,6 @@ export default function ReadItem({ config, selectedItem }) {
           </p>
         </Col>
         <Col className="gutter-row" span={4}>
-          <p
-            style={{
-              textAlign: 'right',
-            }}
-          >
-            <strong>{translate('Quantity')}</strong>
-          </p>
-        </Col>
-        <Col className="gutter-row" span={5}>
           <p
             style={{
               textAlign: 'right',

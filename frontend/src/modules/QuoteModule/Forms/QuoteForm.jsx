@@ -179,16 +179,19 @@ function LoadQuoteForm({ subTotal = 0, current = null }) {
         <Col className="gutter-row" span={5}>
           <p>{translate('Item')}</p>
         </Col>
-        <Col className="gutter-row" span={7}>
+        <Col className="gutter-row" span={6}>
           <p>{translate('Description')}</p>
         </Col>
-        <Col className="gutter-row" span={3}>
+        <Col className="gutter-row" span={2}>
           <p>{translate('Quantity')}</p>{' '}
+        </Col>
+        <Col className="gutter-row" span={2}>
+          <p>{translate('Unit')}</p>
         </Col>
         <Col className="gutter-row" span={4}>
           <p>{translate('Price')}</p>
         </Col>
-        <Col className="gutter-row" span={5}>
+        <Col className="gutter-row" span={4}>
           <p>{translate('Total')}</p>
         </Col>
       </Row>
