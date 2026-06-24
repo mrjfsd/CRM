@@ -1,5 +1,12 @@
 const Joi = require('joi');
 
+const UOM_VALUES = [
+  'SQM', 'SQF', 'LM', 'LF',
+  'PCS', 'UNIT', 'SET', 'LOT', 'NOS', 'LUM',
+  'KG', 'TON', 'MT',
+  'HR', 'MD', 'MH', 'WK', 'MO',
+];
+
 const schema = Joi.object({
   client: Joi.alternatives().try(Joi.string(), Joi.object()).required(),
   number: Joi.number().required(),
@@ -15,7 +22,7 @@ const schema = Joi.object({
         itemName: Joi.string().required(),
         description: Joi.string().allow(''),
         quantity: Joi.number().required(),
-        unit: Joi.number().integer().min(1).default(1).optional(),
+        unit: Joi.string().valid(...UOM_VALUES).default('PCS').optional(),
         price: Joi.number().required(),
         total: Joi.number().required(),
       }).required()

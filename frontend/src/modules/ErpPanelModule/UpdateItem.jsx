@@ -70,8 +70,7 @@ export default function UpdateItem({ config, UpdateForm }) {
       items.map((item) => {
         if (item) {
           if (item.quantity && item.price) {
-            const unit = item.unit ?? 1;
-            let total = calculate.multiply(calculate.multiply(item['quantity'], unit), item['price']);
+            let total = calculate.multiply(item['quantity'], item['price']);
             //sub total
             subTotal = calculate.add(subTotal, total);
           }
@@ -94,9 +93,8 @@ export default function UpdateItem({ config, UpdateForm }) {
         let newList = [];
         fieldsValue.items.map((item) => {
           const { quantity, unit, price, itemName, description } = item;
-          const unitVal = unit ?? 1;
-          const total = calculate.multiply(calculate.multiply(quantity, unitVal), price);
-          newList.push({ total, quantity, unit: unitVal, price, itemName, description });
+          const total = calculate.multiply(quantity, price);
+          newList.push({ total, quantity, unit: unit || 'PCS', price, itemName, description });
         });
         dataToUpdate.items = newList;
       }

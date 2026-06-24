@@ -64,8 +64,7 @@ export default function CreateItem({ config, CreateForm }) {
             subOfferTotal = calculate.add(subOfferTotal, offerTotal);
           }
           if (item.quantity && item.price) {
-            const unit = item.unit ?? 1;
-            let total = calculate.multiply(calculate.multiply(item['quantity'], unit), item['price']);
+            let total = calculate.multiply(item['quantity'], item['price']);
             //sub total
             subTotal = calculate.add(subTotal, total);
           }
@@ -93,9 +92,7 @@ export default function CreateItem({ config, CreateForm }) {
       if (fieldsValue.items) {
         let newList = [...fieldsValue.items];
         newList.map((item) => {
-          const unit = item.unit ?? 1;
-          item.unit = unit;
-          item.total = calculate.multiply(calculate.multiply(item.quantity, unit), item.price);
+          item.total = calculate.multiply(item.quantity, item.price);
         });
         fieldsValue = {
           ...fieldsValue,

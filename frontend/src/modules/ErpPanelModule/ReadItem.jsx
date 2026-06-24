@@ -49,7 +49,7 @@ const Item = ({ item, currentErp }) => {
             textAlign: 'right',
           }}
         >
-          {item.unit ?? 1}
+          {typeof item.unit === 'string' && item.unit ? item.unit : 'PCS'}
         </p>
       </Col>
       <Col className="gutter-row" span={4}>

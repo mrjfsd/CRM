@@ -1,26 +1,64 @@
 import { useState, useEffect } from 'react';
-import { Form, Input, InputNumber, Row, Col } from 'antd';
+import { Form, Input, InputNumber, Row, Col, Select } from 'antd';
 
 import { DeleteOutlined } from '@ant-design/icons';
-import { useMoney, useDate } from '@/settings';
+import { useMoney } from '@/settings';
 import calculate from '@/utils/calculate';
+
+// ─── Unit of Measure options ───────────────────────────────────────────────
+const UOM_OPTIONS = [
+  { label: 'SQM – Square Meter',   value: 'SQM',  group: 'Area & Measurement' },
+  { label: 'SQF – Square Foot',    value: 'SQF',  group: 'Area & Measurement' },
+  { label: 'LM – Linear Meter',    value: 'LM',   group: 'Area & Measurement' },
+  { label: 'LF – Linear Foot',     value: 'LF',   group: 'Area & Measurement' },
+
+  { label: 'PCS – Pieces',         value: 'PCS',  group: 'Quantity & Itemized' },
+  { label: 'UNIT – Unit',          value: 'UNIT', group: 'Quantity & Itemized' },
+  { label: 'SET – Set',            value: 'SET',  group: 'Quantity & Itemized' },
+  { label: 'LOT – Lot',            value: 'LOT',  group: 'Quantity & Itemized' },
+  { label: 'NOS – Numbers',        value: 'NOS',  group: 'Quantity & Itemized' },
+  { label: 'LUM – Lump Sum',       value: 'LUM',  group: 'Quantity & Itemized' },
+
+  { label: 'KG – Kilogram',        value: 'KG',   group: 'Weight & Material' },
+  { label: 'TON – Metric Ton',     value: 'TON',  group: 'Weight & Material' },
+  { label: 'MT – Metric Tonne',    value: 'MT',   group: 'Weight & Material' },
+
+  { label: 'HR – Hours',           value: 'HR',   group: 'Labor & Time' },
+  { label: 'MD – Man-Days',        value: 'MD',   group: 'Labor & Time' },
+  { label: 'MH – Man-Hours',       value: 'MH',   group: 'Labor & Time' },
+  { label: 'WK – Week',            value: 'WK',   group: 'Labor & Time' },
+  { label: 'MO – Month',           value: 'MO',   group: 'Labor & Time' },
+];
+
+// Group into Select optgroup structure
+const UOM_GROUPED = UOM_OPTIONS.reduce((acc, opt) => {
+  const group = acc.find((g) => g.label === opt.group);
+  if (group) {
+    group.options.push({ label: opt.label, value: opt.value });
+  } else {
+    acc.push({ label: opt.group, options: [{ label: opt.label, value: opt.value }] });
+  }
+  return acc;
+}, []);
+
+// Graceful fallback for legacy numeric values stored in older documents
+const VALID_UOM_VALUES = UOM_OPTIONS.map((o) => o.value);
+const normalisedUnit = (raw) => {
+  if (raw && VALID_UOM_VALUES.includes(String(raw))) return String(raw);
+  return 'PCS';
+};
+
+// ───────────────────────────────────────────────────────────────────────────
 
 export default function ItemRow({ field, remove, current = null }) {
   const [totalState, setTotal] = useState(undefined);
   const [price, setPrice] = useState(0);
   const [quantity, setQuantity] = useState(0);
-  const [unit, setUnit] = useState(1);
 
   const money = useMoney();
-  const updateQt = (value) => {
-    setQuantity(value);
-  };
-  const updatePrice = (value) => {
-    setPrice(value);
-  };
-  const updateUnit = (value) => {
-    setUnit(value ?? 1);
-  };
+
+  const updateQt = (value) => setQuantity(value);
+  const updatePrice = (value) => setPrice(value);
 
   useEffect(() => {
     if (current) {
@@ -28,23 +66,18 @@ export default function ItemRow({ field, remove, current = null }) {
       // it receives an invoice.item instead of just item
       // and breaks the code, but now we can check if items exists,
       // and if it doesn't we can access invoice.items.
-
       const { items, invoice } = current;
 
       if (invoice) {
         const item = invoice[field.fieldKey];
-
         if (item) {
           setQuantity(item.quantity);
-          setUnit(item.unit ?? 1);
           setPrice(item.price);
         }
       } else {
         const item = items[field.fieldKey];
-
         if (item) {
           setQuantity(item.quantity);
-          setUnit(item.unit ?? 1);
           setPrice(item.price);
         }
       }
@@ -52,10 +85,9 @@ export default function ItemRow({ field, remove, current = null }) {
   }, [current]);
 
   useEffect(() => {
-    const currentTotal = calculate.multiply(calculate.multiply(price, unit), quantity);
-
+    const currentTotal = calculate.multiply(price, quantity);
     setTotal(currentTotal);
-  }, [price, quantity, unit]);
+  }, [price, quantity]);
 
   return (
     <Row gutter={[12, 12]} style={{ position: 'relative' }}>
@@ -68,7 +100,7 @@ export default function ItemRow({ field, remove, current = null }) {
               message: 'Missing itemName name',
             },
             {
-              pattern: /^(?!\s*$)[\s\S]+$/, // Regular expression to allow spaces, alphanumeric, and special characters, but not just spaces
+              pattern: /^(?!\s*$)[\s\S]+$/,
               message: 'Item Name must contain alphanumeric or special characters',
             },
           ]}
@@ -76,42 +108,35 @@ export default function ItemRow({ field, remove, current = null }) {
           <Input placeholder="Item Name" />
         </Form.Item>
       </Col>
+
       <Col className="gutter-row" span={6}>
         <Form.Item name={[field.name, 'description']}>
           <Input placeholder="description Name" />
         </Form.Item>
       </Col>
+
       <Col className="gutter-row" span={2}>
         <Form.Item name={[field.name, 'quantity']} rules={[{ required: true }]}>
           <InputNumber style={{ width: '100%' }} min={0} onChange={updateQt} />
         </Form.Item>
       </Col>
-      <Col className="gutter-row" span={2}>
+
+      <Col className="gutter-row" span={3}>
         <Form.Item
           name={[field.name, 'unit']}
-          initialValue={1}
-          rules={[
-            { required: true, message: 'Required' },
-            {
-              type: 'integer',
-              message: 'Must be an integer',
-            },
-            {
-              validator: (_, value) =>
-                value >= 1
-                  ? Promise.resolve()
-                  : Promise.reject(new Error('Min value is 1')),
-            },
-          ]}
+          initialValue="PCS"
+          getValueProps={(value) => ({ value: normalisedUnit(value) })}
         >
-          <InputNumber
+          <Select
+            showSearch
+            placeholder="UOM"
+            options={UOM_GROUPED}
+            optionFilterProp="label"
             style={{ width: '100%' }}
-            min={1}
-            precision={0}
-            onChange={updateUnit}
           />
         </Form.Item>
       </Col>
+
       <Col className="gutter-row" span={4}>
         <Form.Item name={[field.name, 'price']} rules={[{ required: true }]}>
           <InputNumber
@@ -124,6 +149,7 @@ export default function ItemRow({ field, remove, current = null }) {
           />
         </Form.Item>
       </Col>
+
       <Col className="gutter-row" span={4}>
         <Form.Item name={[field.name, 'total']}>
           <Form.Item>

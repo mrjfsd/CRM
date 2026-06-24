@@ -48,8 +48,8 @@ const quoteSchema = new mongoose.Schema({
         required: true,
       },
       unit: {
-        type: Number,
-        default: 1,
+        type: String,
+        default: 'PCS',
       },
       price: {
         type: Number,

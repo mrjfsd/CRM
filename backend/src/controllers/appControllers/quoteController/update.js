@@ -32,8 +32,7 @@ const update = async (req, res) => {
   let total = 0;
 
   items.map((item) => {
-    const unit = item['unit'] ?? 1;
-    let itemTotal = calculate.multiply(calculate.multiply(item['quantity'], unit), item['price']);
+    let itemTotal = calculate.multiply(item['quantity'], item['price']);
     subTotal = calculate.add(subTotal, itemTotal);
     item['total'] = itemTotal;
   });
