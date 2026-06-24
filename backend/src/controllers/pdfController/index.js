@@ -72,6 +72,13 @@ exports.generatePdf = async (
           format: info.format,
           orientation: 'portrait',
           border: '10mm',
+          // PhantomJS renders at 72 DPI on Linux but 96 DPI on Windows.
+          // zoomFactor: 72/96 = 0.75 normalises the output so production
+          // matches localhost without touching any CSS or template code.
+          zoomFactor: 0.75,
+          // Allow PhantomJS to access local URLs so fonts can be loaded
+          // on the production server (overrides the default --local-url-access=false).
+          localUrlAccess: true,
         })
         .toFile(targetLocation, function (error) {
           if (error) throw new Error(error);
