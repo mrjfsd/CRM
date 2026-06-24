@@ -1,5 +1,6 @@
 const pug = require('pug');
 const fs = require('fs');
+const path = require('path');
 const moment = require('moment');
 let pdf = require('html-pdf');
 const { listAllSettings, loadSettings } = require('@/middlewares/settings');
@@ -58,6 +59,12 @@ exports.generatePdf = async (
 
       settings.public_server_file = process.env.PUBLIC_SERVER_FILE;
 
+      // Compute an absolute file:// URL for the bundled fonts directory so
+      // PhantomJS can load Arimo (Arial-compatible) on any OS without relying
+      // on system-installed fonts (which differ between Windows dev and Linux prod).
+      const fontsDir = path.resolve('src/public/fonts');
+      const fontBase = 'file:///' + fontsDir.replace(/\\/g, '/');
+
       const htmlContent = pug.renderFile('src/pdf/' + modelName + '.pug', {
         model: result,
         settings,
@@ -65,6 +72,7 @@ exports.generatePdf = async (
         dateFormat,
         moneyFormatter,
         moment: moment,
+        fontBase,
       });
 
       pdf
@@ -72,12 +80,8 @@ exports.generatePdf = async (
           format: info.format,
           orientation: 'portrait',
           border: '10mm',
-          // PhantomJS renders at 72 DPI on Linux but 96 DPI on Windows.
-          // zoomFactor: 72/96 = 0.75 normalises the output so production
-          // matches localhost without touching any CSS or template code.
-          zoomFactor: 0.75,
-          // Allow PhantomJS to access local URLs so fonts can be loaded
-          // on the production server (overrides the default --local-url-access=false).
+          // Allow PhantomJS to read file:// URLs so it can load the bundled
+          // Arimo font files from src/public/fonts/ on the production server.
           localUrlAccess: true,
         })
         .toFile(targetLocation, function (error) {
