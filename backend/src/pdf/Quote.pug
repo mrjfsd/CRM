@@ -152,7 +152,6 @@ html
         width:100%;
         margin-top:20px;
         line-height: 0;
-        background:red;
       }
 
       .page-two-bg img{
@@ -163,7 +162,7 @@ html
       }
   body
 
-    img(src="http://localhost:8888/public/download/quote/quotation-header.png")
+    img(src=settings.public_server_file + "public/download/quote/quotation-header.png")
 
     .quote-info
 
@@ -221,7 +220,7 @@ html
           |  info@goldenelitetents.ae
 
     .scope-image
-    img(src="http://localhost:8888/public/download/quote/scope-of-work.png")
+    img(src=settings.public_server_file + "public/download/quote/scope-of-work.png")
 
     table.quote-table
       thead
@@ -277,11 +276,11 @@ html
           strong #{moneyFormatter({amount:model.total})}
 
     .footer-image
-        img(src="http://localhost:8888/public/download/quote/footer-bg.png")
+        img(src=settings.public_server_file + "public/download/quote/footer-bg.png")
 
     .page-break
 
-        img(src="http://localhost:8888/public/download/quote/quotation-header2.png")
+        img(src=settings.public_server_file + "public/download/quote/quotation-header2.png")
     
     .payment-section
 
@@ -301,7 +300,7 @@ html
           li 10% final payment upon full project completion
 
     .page2-footer
-          img(src="http://localhost:8888/public/download/quote/page2-footer.png")      
+          img(src=settings.public_server_file + "public/download/quote/page2-footer.png")
 
     .page-two-bg
-          img(src="http://localhost:8888/public/download/quote/footer2-bg.png")
+          img(src=settings.public_server_file + "public/download/quote/footer2-bg.png")
