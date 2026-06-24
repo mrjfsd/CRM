@@ -63,7 +63,18 @@ exports.generatePdf = async (
       // PhantomJS can load Arimo (Arial-compatible) on any OS without relying
       // on system-installed fonts (which differ between Windows dev and Linux prod).
       const fontsDir = path.resolve('src/public/fonts');
-      const fontBase = 'file:///' + fontsDir.replace(/\\/g, '/');
+      const fontBase = require('url').pathToFileURL(fontsDir).href;
+
+      // ── PDF FONT DIAGNOSTIC ─────────────────────────────────────────────────
+      // These lines log to the backend terminal so production can be compared
+      // to localhost. Check your server logs after generating a PDF.
+      console.log('[PDF-DIAG] platform   :', process.platform);
+      console.log('[PDF-DIAG] cwd        :', process.cwd());
+      console.log('[PDF-DIAG] fontsDir   :', fontsDir);
+      console.log('[PDF-DIAG] fontBase   :', fontBase);
+      console.log('[PDF-DIAG] Arimo-Regular exists:', fs.existsSync(path.join(fontsDir, 'Arimo-Regular.ttf')));
+      console.log('[PDF-DIAG] Arimo-Bold    exists:', fs.existsSync(path.join(fontsDir, 'Arimo-Bold.ttf')));
+      // ────────────────────────────────────────────────────────────────────────
 
       const htmlContent = pug.renderFile('src/pdf/' + modelName + '.pug', {
         model: result,
